@@ -122,6 +122,7 @@ bool DECOFUNC(processMultiInputData)(void * paramsPtr, void * varsPtr, QVector<Q
     double ori = - ((double)steer / 400.0) * (M_PI / 2.0);
     cv::Mat img;
     inputdata_2.front()->cvColorImg.copyTo(img);
+    cv::flip(img, img, 1);
     cv::Point compass = cv::Point(100, 100);
     cv::circle(img, compass, 80, cv::Scalar(0,255,0), 1, CV_AA);
     cv::line(img, compass,

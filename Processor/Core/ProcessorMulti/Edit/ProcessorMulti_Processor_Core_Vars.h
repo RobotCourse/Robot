@@ -52,19 +52,6 @@ public:
 	}
 public:
 	//*******************Please add variables below*******************
-    //定义初始位置坐标，使之与轨迹图坐标对齐，参见配置文件config.xml设置
-       double initx;
-       double inity;
-       double initori;
-       //上一帧数据
-       double lastx;
-       double lasty;
-       double lastori;
-       short lastpulsenum;//用来判断溢出
-       QTime qlasttimestamp;
-       bool isInit;//判断是否为首帧数据
-       double initOriValue;//航向角初始值
-       const double PI=3.1415926535;
 
 };
 

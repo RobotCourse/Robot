@@ -71,12 +71,6 @@ public:
 public:
 	//*******************Please add variables below*******************
 
-    long timestamp;
-	//姿态定义
-    double x;
-    double y;
-    double orientation;
-
 };
 
 //The Output Data SourceDrainMono_Sensor_EncoderIMU_Order_InputData is defined in the header below

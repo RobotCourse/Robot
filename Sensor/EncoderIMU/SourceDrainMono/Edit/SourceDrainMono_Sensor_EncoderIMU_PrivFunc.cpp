@@ -131,9 +131,32 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
     // int meslen = 9;
     // Gao Biao
     int meslen = 11;
+    int endid;
     if (startid >= 0) {
-        int endid = vars->databuffer.indexOf(vars->packtail,startid+meslen);
-        if((endid - meslen) == startid) {
+
+//        while (endid - meslen > startid) {
+//            startid += 11;
+////            if (vars->databuffer[startid] == QByteArray(vars->packtail))
+////                break;
+//        }
+//        if((endid - meslen) == startid)
+        int len = vars->databuffer.size();
+        int ii=0;
+        while(startid<len && ((startid+11)<len))
+        {
+            int startid = vars->databuffer.indexOf(vars->packhead,startid);
+            if (vars->databuffer.at(startid+11) != vars->packtail.at(0))
+            {
+                startid += 1;
+            }
+            else
+            {
+                endid = startid+11;
+                break;
+            }
+        }
+        if (startid<len)
+        {
             if(vars->qlasttimestamp.isNull()) {
                 vars->qlasttimestamp=QTime::currentTime();
             }

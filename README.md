@@ -1,11 +1,11 @@
 # get the repo
-`git clone https://github.com/jsgaobiao/Robot.git Robot`
+`git clone https://github.com/RobotCourse/Robot.git Robot`
 
 
 # dependancy
 1. `sudo apt-get install libqt5serialport5-dev libopenni2-dev libudev-dev`
 2. install URG
-  1. `git clone https://github.com/jsgaobiao/liburg.git`
+  1. `git clone https://github.com/RobotCourse/liburg.git`
   2. `cd liburg`
   3. `sudo make install`
 

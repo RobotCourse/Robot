@@ -20,7 +20,8 @@
 
 //*******************Please add other headers below*******************
 #include <opencv2/opencv.hpp>
-#include <openni2/OpenNI.h>
+//#include <openni2/OpenNI.h>
+#include <NiTE.h>
 
 //There is no input data headers.
 
@@ -87,12 +88,15 @@ public:
 
 	*/
 	~SensorTimer_Sensor_xtion_Data() 
-	{
+    {
 		
 	}
 public:
 	//*******************Please add variables below*******************
     cv::Mat cvDepthImg, cvColorImg;
+    cv::Point3f jointPos3D[15];
+    cv::Point jointPos2D[15];
+    bool isPersonVisable;
     QTime qtimestamp;
 };
 

@@ -38,8 +38,7 @@ public:
 
 	*/
 	SensorTimer_Sensor_xtion_Vars() 
-	{
-		
+    {
 	}
 	/*! \fn ~SensorTimer_Sensor_xtion_Vars()
 		\brief The destructor of SensorTimer_Sensor_xtion_Vars. [required]
@@ -54,6 +53,7 @@ public:
         if (oniColorImg.isValid()) {
             oniColorImg.release();
         }
+        delete m_pUserTracker;
 	}
 public:
 	//*******************Please add variables below*******************
@@ -62,6 +62,8 @@ public:
 
     openni::VideoStream oniDepthStream;
     openni::VideoStream oniColorStream;
+
+    nite::UserTracker* m_pUserTracker;
 };
 
 /*! @}*/ 

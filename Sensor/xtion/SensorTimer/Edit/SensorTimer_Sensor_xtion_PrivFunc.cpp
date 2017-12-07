@@ -69,6 +69,15 @@ bool DECOFUNC(setParamsVarsOpenNode)(QString qstrConfigName, QString qstrNodeTyp
         vars->device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
     }
 
+    //NiTE2
+    nite::NiTE::initialize();
+    vars->m_pUserTracker = new nite::UserTracker;
+    nite::Status nirc = vars->m_pUserTracker->create(&(vars->device));
+    if (nirc != nite::STATUS_OK)
+    {
+        return openni::STATUS_ERROR;
+    }
+
 	return 1;
 }
 
@@ -152,6 +161,63 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
         cv::cvtColor(cvRGBImg, outputdata->cvColorImg, CV_RGB2BGR);
     } else {
         return 0;
+    }
+
+    //----------------------------------- NiTE2 ---------------------------------
+
+    memset(outputdata->jointPos2D, 0, sizeof(outputdata->jointPos2D));
+    memset(outputdata->jointPos3D, 0, sizeof(outputdata->jointPos3D));
+    outputdata->isPersonVisable = false;
+
+    nite::UserTrackerFrameRef userTrackerFrame;
+    openni::VideoFrameRef depthFrame;
+    nite::Status rc = vars->m_pUserTracker->readFrame(&userTrackerFrame);
+    if (rc != nite::STATUS_OK)
+    {
+        printf("GetNextData failed\n");
+        return 0;
+    }
+    depthFrame = vars->oniDepthImg; //userTrackerFrame.getDepthFrame();
+    // 从User Frame信息中获取User信息
+    const nite::Array<nite::UserData>& aUsers = userTrackerFrame.getUsers();
+
+    // Frame中User的个数
+    for( int i = 0; i < aUsers.getSize(); ++ i )
+    {
+        const nite::UserData& rUser = aUsers[i];
+        // 当有User用户出现在Kinect面前，则判断并显示
+        if( rUser.isNew() )
+        {
+            std::cout << "New User [" << rUser.getId() << "] found." << std::endl;
+            // 开始人体骨骼跟踪
+            vars->m_pUserTracker->startSkeletonTracking( rUser.getId() );
+        }
+        if ( !rUser.isVisible()) {
+            memset(outputdata->jointPos2D, 0, sizeof(outputdata->jointPos2D));
+            memset(outputdata->jointPos3D, 0, sizeof(outputdata->jointPos3D));
+            continue;
+        }
+        outputdata->isPersonVisable = true;
+        // 获取骨骼坐标
+        const nite::Skeleton& rSkeleton = rUser.getSkeleton();
+        if( rSkeleton.getState() == nite::SKELETON_TRACKED )
+        {
+            // 得到15个骨骼点坐标
+            for(int i = 0; i < 15; i++)
+            {
+                // 得到骨骼坐标
+                const nite::SkeletonJoint& skeletonJoint
+                    = rSkeleton.getJoint((nite::JointType)i);
+                const nite::Point3f& position = skeletonJoint.getPosition();
+                outputdata->jointPos3D[i] = cv::Point3f(position.x, position.y, position.z);
+
+                // 将骨骼点坐标映射到深度坐标中
+                float depth_x, depth_y;
+                vars->m_pUserTracker->convertJointCoordinatesToDepth(position.x, position.y, position.z, &depth_x, &depth_y);
+                cv::Point point((int)depth_x, (int)depth_y);
+                outputdata->jointPos2D[i] = point;
+            }
+        }
     }
     outputdata->qtimestamp = QTime::currentTime();
 	return 1;

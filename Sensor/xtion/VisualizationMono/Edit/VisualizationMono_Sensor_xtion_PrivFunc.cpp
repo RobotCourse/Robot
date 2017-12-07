@@ -94,6 +94,32 @@ bool DECOFUNC(processMonoDrainData)(void * paramsPtr, void * varsPtr, QVector<vo
     cv::Mat cvDepthImg2Show = cvDepthImg.clone();
     cvDepthImg2Show.convertTo(cvDepthImg2Show, CV_8U, 255.0 / 4096.0);
     cv::cvtColor(cvDepthImg2Show, cvDepthImg2Show, CV_GRAY2BGR);
+
+    for (int i = 0; i < 15; i ++) {
+    // 在深度图像中显示出各个骨骼点
+        cv::Point point = draindata.front()->jointPos2D[i];
+        if (point.x > 0 && point.y > 0 && point.x < cvDepthImg2Show.cols && point.y < cvDepthImg2Show.rows)
+            cv::circle(cvDepthImg2Show, point, 6, cv::Scalar(255,0,0), -1);
+    }
+
+    // 画出连线
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[0], draindata.front()->jointPos2D[1], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[1], draindata.front()->jointPos2D[2], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[2], draindata.front()->jointPos2D[4], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[4], draindata.front()->jointPos2D[6], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[1], draindata.front()->jointPos2D[3], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[3], draindata.front()->jointPos2D[5], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[5], draindata.front()->jointPos2D[7], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[2], draindata.front()->jointPos2D[8], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[3], draindata.front()->jointPos2D[8], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[8], draindata.front()->jointPos2D[9], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[9], draindata.front()->jointPos2D[11], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[11], draindata.front()->jointPos2D[13], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[8], draindata.front()->jointPos2D[10], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[10], draindata.front()->jointPos2D[12], cv::Scalar(0,0,128), 2);
+    cv::line(cvDepthImg2Show, draindata.front()->jointPos2D[12], draindata.front()->jointPos2D[14], cv::Scalar(0,0,128), 2);
+
+
     cv::flip(cvDepthImg2Show, cvDepthImg2Show, 1);
     QImage qDepthImg((const uchar*)cvDepthImg2Show.data, cvDepthImg2Show.cols, cvDepthImg2Show.rows,
                      cvDepthImg2Show.step, QImage::Format_RGB888);

@@ -128,30 +128,22 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
     QTime tmptimestamp=QTime::currentTime();
     vars->databuffer.append(datagram);
     int startid=vars->databuffer.indexOf(vars->packhead);
-    // int meslen = 9;
+
     // Gao Biao
     int meslen = 11;
     int endid;
     if (startid >= 0) {
-
-//        while (endid - meslen > startid) {
-//            startid += 11;
-////            if (vars->databuffer[startid] == QByteArray(vars->packtail))
-////                break;
-//        }
-//        if((endid - meslen) == startid)
         int len = vars->databuffer.size();
-        int ii=0;
-        while(startid<len && ((startid+11)<len))
+        while(startid<len && ((startid+meslen)<len))
         {
             int startid = vars->databuffer.indexOf(vars->packhead,startid);
-            if (vars->databuffer.at(startid+11) != vars->packtail.at(0))
+            if (vars->databuffer.at(startid+meslen) != vars->packtail.at(0))
             {
                 startid += 1;
             }
             else
             {
-                endid = startid+11;
+                endid = startid+meslen;
                 break;
             }
         }

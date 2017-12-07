@@ -24,8 +24,9 @@ unix {
 PROJNAME = Robot
 INSTTYPE = MOD
 
+INCLUDEPATH += /home/mini/OpenNI-Linux-x64-2.3/Include
 LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui
-LIBS += -lOpenNI2
+LIBS += -L/home/mini/OpenNI-Linux-x64-2.3/Redist -lOpenNI2
 LIBS += -lurg_c
 
 

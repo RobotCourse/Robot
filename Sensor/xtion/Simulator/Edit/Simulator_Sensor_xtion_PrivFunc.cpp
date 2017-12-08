@@ -1,6 +1,7 @@
 //You need to program this file.
 
 #include "../NoEdit/Simulator_Sensor_xtion_PrivFunc.h"
+#include <cstdio>
 
 //*******************Please add static libraries in .pro file*******************
 //e.g. unix:LIBS += ... or win32:LIBS += ...
@@ -99,14 +100,30 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
     if (vars->textStream.atEnd()) {
         return 0;
     }
+    outputdata->isPersonVisable = false;
+
     QString colorFilename = QString("%1/%2.jpg").arg(vars->colorDir).arg(vars->frameNum);
     QString depthFilename = QString("%1/%2.png").arg(vars->depthDir).arg(vars->frameNum);
+    QString jointFilename = QString("%1/%2.joint").arg(vars->depthDir).arg(vars->frameNum);
     vars->frameNum++;
     outputdata->cvColorImg = cv::imread(colorFilename.toStdString(), 1);
     outputdata->cvDepthImg = cv::imread(depthFilename.toStdString(), -1);
     if (!outputdata->cvColorImg.data || !outputdata->cvDepthImg.data) return 0;
     QTime qtimestamp = QTime::fromMSecsSinceStartOfDay(vars->textStream.readLine().toInt());
     timeStamp = outputdata->qtimestamp = qtimestamp;
+
+    FILE* jointF = std::fopen(jointFilename.toStdString().c_str(), "r");
+    std::fscanf(jointF, "%d\n", &outputdata->isPersonVisable);
+    for (int i = 0; i < 15; i ++) {
+        std::fscanf(jointF, "%f %f %f\n", &outputdata->jointPos3D[i].x,&outputdata->jointPos3D[i].y,&outputdata->jointPos3D[i].z);
+    }
+    for (int i = 0; i < 15; i ++) {
+        std::fscanf(jointF, "%d %d\n", &outputdata->jointPos2D[i].x,&outputdata->jointPos2D[i].y);
+    }
+    std::fclose(jointF);
+    if (outputdata->isPersonVisable) {
+        int gb  = 1;
+    }
 	return 1;
 }
 

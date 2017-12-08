@@ -53,6 +53,7 @@ public:
 public:
 	//*******************Please add variables below*******************
     QFile timestampWriter;
+    QFile jointWriter;
     QString colorDir, depthDir;
     int frameNum;
 };

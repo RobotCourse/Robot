@@ -121,6 +121,10 @@ bool DECOFUNC(processMonoDrainData)(void * paramsPtr, void * varsPtr, QVector<vo
 
 
     cv::flip(cvDepthImg2Show, cvDepthImg2Show, 1);
+    if (draindata.front()->isPersonVisable)
+        cv::putText(cvDepthImg2Show, "Visiable", cv::Point(100,20), cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(255,0,0), 2);
+    else
+        cv::putText(cvDepthImg2Show, "Unvisiable!", cv::Point(100,20), cv::FONT_HERSHEY_PLAIN, 1.5, cv::Scalar(255,0,0), 2);
     QImage qDepthImg((const uchar*)cvDepthImg2Show.data, cvDepthImg2Show.cols, cvDepthImg2Show.rows,
                      cvDepthImg2Show.step, QImage::Format_RGB888);
     vars->depth->setPixmap(QPixmap::fromImage(qDepthImg));

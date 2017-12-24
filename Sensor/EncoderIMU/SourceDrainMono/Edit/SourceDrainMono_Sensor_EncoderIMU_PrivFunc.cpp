@@ -147,7 +147,7 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
                 break;
             }
         }
-        if (startid<len)
+        if ((startid+meslen)<len)
         {
             if(vars->qlasttimestamp.isNull()) {
                 vars->qlasttimestamp=QTime::currentTime();
@@ -155,16 +155,16 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
             double deltaTime = vars->qlasttimestamp.msecsTo(tmptimestamp) / 1000.0;
             vars->qlasttimestamp=tmptimestamp;
 
-            QByteArray datagram = vars->databuffer.mid(startid + vars->packhead.size(), endid - (startid + vars->packhead.size()));
-            short sAngleX   =  (*(short*)(datagram.data()));
-            short sAngleY   =  (*(short*)(datagram.data() + sizeof(short)));
-            short sAngleZ   = -(*(short*)(datagram.data() + sizeof(short) * 2));
-            short sPulseNum =  (*(short*)(datagram.data() + sizeof(short) * 3));
-            short sBackDis  =  (*(short*)(datagram.data() + sizeof(short) * 4));
+            QByteArray localdatagram = vars->databuffer.mid(startid+1, 10);
 
+            short sAngleX   =  (*(short*)(localdatagram.data()));
+            short sAngleY   =  (*(short*)(localdatagram.data() + sizeof(short)));
+            short sAngleZ   = -(*(short*)(localdatagram.data() + sizeof(short) * 2));
+            short sPulseNum =  (*(short*)(localdatagram.data() + sizeof(short) * 3));
+            short sBackDis  =  (*(short*)(localdatagram.data() + sizeof(short) * 4));
             double curori = M_PI * sAngleZ / 1800.0;
 
-            bool isEStop = (sAngleZ == 0 && sPulseNum == 0);
+            bool isEStop = (sAngleZ == 0 && sPulseNum  == 0);
             if (isEStop) {
                 vars->lastpulsenum = 0;
                 vars->initOriValue = -vars->lastori;

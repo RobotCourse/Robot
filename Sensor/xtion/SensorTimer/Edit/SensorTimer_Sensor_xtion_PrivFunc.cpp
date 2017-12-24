@@ -184,6 +184,18 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
     // Frame中User的个数
     for( int i = 0; i < aUsers.getSize(); ++ i )
     {
+        if (outputdata->isPersonVisable) {
+            int sum = 0;
+            for (int j = 0; j < 15; j ++)
+                sum += outputdata->jointPos2D[j].x + outputdata->jointPos2D[j].y;
+            if (sum != 0) {
+                break;
+            }
+            else {
+                outputdata->isPersonVisable = false;
+            }
+
+        }
         const nite::UserData& rUser = aUsers[i];
         // 当有User用户出现在Kinect面前，则判断并显示
         if( rUser.isNew() )
@@ -200,6 +212,7 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
         outputdata->isPersonVisable = true;
         // 获取骨骼坐标
         const nite::Skeleton& rSkeleton = rUser.getSkeleton();
+        vars->m_pUserTracker->startSkeletonTracking( rUser.getId() );
         if( rSkeleton.getState() == nite::SKELETON_TRACKED )
         {
             // 得到15个骨骼点坐标
@@ -217,6 +230,9 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
                 cv::Point point((int)depth_x, (int)depth_y);
                 outputdata->jointPos2D[i] = point;
             }
+        }
+        else {
+            outputdata->isPersonVisable = false;
         }
     }
     outputdata->qtimestamp = QTime::currentTime();

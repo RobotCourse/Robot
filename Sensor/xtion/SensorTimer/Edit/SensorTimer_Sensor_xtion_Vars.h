@@ -64,6 +64,7 @@ public:
     openni::VideoStream oniColorStream;
 
     nite::UserTracker* m_pUserTracker;
+
 };
 
 /*! @}*/ 

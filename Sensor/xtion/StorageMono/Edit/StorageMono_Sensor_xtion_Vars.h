@@ -38,8 +38,7 @@ public:
 
 	*/
 	StorageMono_Sensor_xtion_Vars() 
-	{
-		
+    {
 	}
 	/*! \fn ~StorageMono_Sensor_xtion_Vars()
 		\brief The destructor of StorageMono_Sensor_xtion_Vars. [required]

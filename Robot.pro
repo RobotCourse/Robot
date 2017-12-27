@@ -24,14 +24,13 @@ unix {
 PROJNAME = Robot
 INSTTYPE = MOD
 
-INCLUDEPATH += /usr/include/openni2
+INCLUDEPATH += /home/mini/OpenNI-Linux-x64-2.3/Include
 LIBS += -lopencv_core -lopencv_imgproc -lopencv_highgui
-#LIBS += -L/home/mini/OpenNI-Linux-x64-2.3/Redist -lOpenNI2
-LIBS += -lOpenNI2
+LIBS += -L/home/mini/OpenNI-Linux-x64-2.3/Redist -lOpenNI2
 LIBS += -lurg_c
 
-INCLUDEPATH += /home/mini/Documents/NiTE-2.0.0/Include
-LIBS += /home/mini/Documents/NiTE-2.0.0/Redist/libNiTE2.so
+INCLUDEPATH += /home/mini/NiTE-2.0.0/Include
+LIBS += /home/mini/NiTE-2.0.0/Redist/libNiTE2.so
 
 
 

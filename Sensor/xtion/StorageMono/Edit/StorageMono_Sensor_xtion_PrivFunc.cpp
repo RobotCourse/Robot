@@ -117,11 +117,14 @@ bool DECOFUNC(processMonoDrainData)(void * paramsPtr, void * varsPtr, QVector<vo
         QString colorFilename = QString("%1/%2.jpg").arg(vars->colorDir).arg(vars->frameNum);
         QString depthFilename = QString("%1/%2.png").arg(vars->depthDir).arg(vars->frameNum);
         QString jointFilename = QString("%1/%2.joint").arg(vars->depthDir).arg(vars->frameNum);
+
         vars->frameNum++;
         cv::imwrite(colorFilename.toStdString(), data->cvColorImg);
         cv::imwrite(depthFilename.toStdString(), data->cvDepthImg);
 
-        vars->jointWriter.setFileName(jointFilename);
+        if (vars->jointWriter.fileName() != jointFilename)
+            vars->jointWriter.setFileName(jointFilename);
+
         bool flag = vars->jointWriter.open(QFile::WriteOnly | QFile::Text);
         if (!flag) {
             vars->jointWriter.close();
@@ -136,6 +139,7 @@ bool DECOFUNC(processMonoDrainData)(void * paramsPtr, void * varsPtr, QVector<vo
         }
 
     }
+    vars->jointWriter.close();
     return 1;
 }
 

@@ -127,16 +127,19 @@ bool DECOFUNC(generateSourceData)(void * paramsPtr, void * varsPtr, void * outpu
     QByteArray datagram=vars->serialport.readAll();
     QTime tmptimestamp=QTime::currentTime();
     vars->databuffer.append(datagram);
-    int startid=vars->databuffer.indexOf(vars->packhead);
+    int firstid=vars->databuffer.indexOf(vars->packhead);
 
     // Gao Biao
     int meslen = 11;
-    int endid;
-    if (startid >= 0) {
+    int endid = 0;
+    if (firstid >= 0) {
         int len = vars->databuffer.size();
+        int startid = firstid;
         while(startid<len && ((startid+meslen)<len))
         {
-            int startid = vars->databuffer.indexOf(vars->packhead,startid);
+            startid = vars->databuffer.indexOf(vars->packhead,startid);
+            if (startid + meslen >= vars->databuffer.size())
+                break;
             if (vars->databuffer.at(startid+meslen) != vars->packtail.at(0))
             {
                 startid += 1;
